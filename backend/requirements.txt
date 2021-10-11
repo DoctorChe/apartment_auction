@@ -1,3 +1,8 @@
 fastapi
 psycopg2-binary==2.9.1
 sqlalchemy==1.4.25
+
+# dev
+httpx==0.19.0
+pytest==6.2.5
+pytest_asyncio==0.15.1
