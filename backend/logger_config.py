@@ -2,7 +2,7 @@ import logging
 import os
 
 
-CONSOLE_LOGGING_LEVEL = os.getenv("CONSOLE_LOGGING_LEVEL", default=logging.INFO)
+CONSOLE_LOGGING_LEVEL = os.getenv('CONSOLE_LOGGING_LEVEL', default=logging.INFO)
 
 
 def get_logger(name):
