@@ -16,7 +16,7 @@ services:
       - db
 
   db:
-    image: postgis/postgis
+    image: postgres
     restart: always
     environment:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
