@@ -1,0 +1,30 @@
+[{
+        "floor": 1,
+        "number": 34,
+        "area": 30.5,
+        "rooms": 1,
+        "classes": ["C балконом", "С отделкой"],
+        "start_price": 3000000
+    }, {
+        "floor": 1,
+        "number": 35,
+        "area": 40.5,
+        "rooms": 2,
+        "classes": ["C балконом", "Без отделки"],
+        "start_price": 5000000
+    }, {
+        "floor": 2,
+        "number": 46,
+        "area": 25,
+        "rooms": 1,
+        "classes": ["Без балкона", "С отделкой"],
+        "start_price": 2500000
+    }, {
+        "floor": 2,
+        "number": 49,
+        "area": 30.5,
+        "rooms": 1,
+        "classes": ["C балконом", "С отделкой"],
+        "start_price": 3000000
+    }
+]
