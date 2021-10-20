@@ -1,8 +1,6 @@
 import logging
-import os
 
-
-CONSOLE_LOGGING_LEVEL = os.getenv('CONSOLE_LOGGING_LEVEL', default=logging.INFO)
+from backend.core.config import settings
 
 
 def get_logger(name):
@@ -10,7 +8,7 @@ def get_logger(name):
     logger.setLevel(logging.DEBUG)
 
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(CONSOLE_LOGGING_LEVEL)
+    console_handler.setLevel(settings.CONSOLE_LOGGING_LEVEL)
 
     # create formatter
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
