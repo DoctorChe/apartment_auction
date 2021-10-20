@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from backend.api.routers import router
+from backend.api.endpoints import root
 
 app = FastAPI()
 
-app.include_router(router)
+app.include_router(root.router)
