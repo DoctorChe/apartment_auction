@@ -10,11 +10,11 @@ class Status(str, Enum):
 
 
 class ApartmentBase(BaseModel):
-    floor: int
-    number: int
-    area: float
-    rooms: int
-    start_price: int
+    floor: int = Field(..., gt=0)
+    number: int = Field(..., gt=0)
+    area: float = Field(..., gt=0)
+    rooms: int = Field(..., gt=0)
+    start_price: int = Field(..., gt=0)
 
 
 class ApartmentIn(ApartmentBase):
