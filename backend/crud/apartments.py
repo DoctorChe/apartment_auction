@@ -11,7 +11,7 @@ def create_apartment(db: Session, apartment_in: schemas.ApartmentIn) -> schemas.
     classes = apartment_in.classes
     balcony = True if 'C балконом' in classes else False
     finishing = True if 'С отделкой' in classes else False
-    apartment = schemas.Apartment(**apartment_in.dict(), balcony=balcony, finishing=finishing)
+    apartment = schemas.ApartmentToDB(**apartment_in.dict(), balcony=balcony, finishing=finishing)
     apartment_db = models.Apartment(**apartment.dict())
     db.add(apartment_db)
     db.commit()
@@ -23,8 +23,8 @@ def create_apartments(db: Session, apartments: list[schemas.ApartmentIn]) -> lis
     return [create_apartment(db, apartment_in=apartment) for apartment in apartments]
 
 
-def read_apartment(db: Session, number: int):
-    return db.query(models.Apartment).filter(models.Apartment.number == number).first()
+def read_apartment(db: Session, apartment_id: int):
+    return db.query(models.Apartment).filter(models.Apartment.id == apartment_id).first()
 
 
 def read_all_apartments(db: Session):
@@ -45,8 +45,8 @@ def update_apartment(db: Session, apartment: models.Apartment,
     return apartment
 
 
-def delete_apartment(db: Session, number: int):
-    apartment = db.query(models.Apartment).filter(models.Apartment.number == number).first()
+def delete_apartment(db: Session, apartment_id: int):
+    apartment = db.query(models.Apartment).filter(models.Apartment.id == apartment_id).first()
     db.delete(apartment)
     db.commit()
     return apartment

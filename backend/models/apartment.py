@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, Boolean, String
+from sqlalchemy import Column, Integer, Float, Boolean, String, Identity
 
 from backend.db.base_class import Base
 
@@ -6,7 +6,8 @@ from backend.db.base_class import Base
 class Apartment(Base):
     __tablename__ = 'apartments'
 
-    number = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, Identity(), primary_key=True, index=True)
+    number = Column(Integer, unique=True, nullable=False)
     floor = Column(Integer, nullable=False)
     area = Column(Float, nullable=False)
     rooms = Column(Integer, nullable=False)

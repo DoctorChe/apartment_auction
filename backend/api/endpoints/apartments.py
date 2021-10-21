@@ -13,9 +13,9 @@ def create_apartment(*, db: Session = Depends(get_db), payload: schemas.Apartmen
     return apartment
 
 
-@router.get('/{number}/', response_model=schemas.Apartment)
-def read_apartment(*, db: Session = Depends(get_db), number: int = Path(..., gt=0)):
-    apartment = crud.read_apartment(db=db, number=number)
+@router.get('/{apartment_id}/', response_model=schemas.Apartment)
+def read_apartment(*, db: Session = Depends(get_db), apartment_id: int = Path(..., gt=0)):
+    apartment = crud.read_apartment(db=db, apartment_id=apartment_id)
     if not apartment:
         raise HTTPException(status_code=404, detail='Apartment not found')
     return apartment
@@ -26,10 +26,10 @@ def read_all_apartments(db: Session = Depends(get_db)):
     return crud.read_all_apartments(db)
 
 
-@router.put('/{number}/', response_model=schemas.Apartment)
+@router.put('/{apartment_id}/', response_model=schemas.Apartment)
 def update_apartment(*, db: Session = Depends(get_db),
-                     number: int = Path(..., gt=0), payload: schemas.Apartment):
-    apartment = crud.read_apartment(db=db, number=number)
+                     apartment_id: int = Path(..., gt=0), payload: schemas.Apartment):
+    apartment = crud.read_apartment(db=db, apartment_id=apartment_id)
     if not apartment:
         raise HTTPException(status_code=404, detail='Apartment not found')
     apartment = crud.update_apartment(
@@ -45,10 +45,10 @@ def update_apartment(*, db: Session = Depends(get_db),
     return apartment
 
 
-@router.delete('/{number}/', response_model=schemas.Apartment)
-def delete_apartment(*, db: Session = Depends(get_db), number: int = Path(..., gt=0)):
-    apartment = crud.read_apartment(db=db, number=number)
+@router.delete('/{apartment_id}/', response_model=schemas.Apartment)
+def delete_apartment(*, db: Session = Depends(get_db), apartment_id: int = Path(..., gt=0)):
+    apartment = crud.read_apartment(db=db, apartment_id=apartment_id)
     if not apartment:
         raise HTTPException(status_code=404, detail='Apartment not found')
-    apartment = crud.delete_apartment(db=db, number=number)
+    apartment = crud.delete_apartment(db=db, apartment_id=apartment_id)
     return apartment

@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Status(str, Enum):
@@ -21,10 +21,14 @@ class ApartmentIn(ApartmentBase):
     classes: list[str]
 
 
-class Apartment(ApartmentBase):
+class ApartmentToDB(ApartmentBase):
     balcony: bool
     finishing: bool
     status: Status = Status.FOR_SALE
+
+
+class Apartment(ApartmentToDB):
+    id: int = Field(..., gt=0)
 
     class Config:
         orm_mode = True

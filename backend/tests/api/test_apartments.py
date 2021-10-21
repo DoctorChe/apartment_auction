@@ -17,6 +17,7 @@ def test_create_apartment(client: TestClient, monkeypatch):
     }
 
     return_data = {
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -64,6 +65,7 @@ def test_create_apartment_invalid_json(client: TestClient, payload, status_code)
 
 def test_read_apartment(client: TestClient, monkeypatch):
     test_data = {
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -74,18 +76,18 @@ def test_read_apartment(client: TestClient, monkeypatch):
         'status': 'for sale'
     }
 
-    def mock_read_apartment(db, number):
+    def mock_read_apartment(db, apartment_id):
         return test_data
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
-    response = client.get('/apartments/34')
+    response = client.get('/apartments/1')
     assert response.status_code == 200
     assert response.json() == test_data
 
 
 def test_read_apartment_incorrect_number(client: TestClient, monkeypatch):
-    def mock_read_apartment(db, number):
+    def mock_read_apartment(db, apartment_id):
         return None
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
@@ -100,6 +102,7 @@ def test_read_apartment_incorrect_number(client: TestClient, monkeypatch):
 
 def test_read_all_apartments(client: TestClient, monkeypatch):
     test_data = [{
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -109,6 +112,7 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         'start_price': 3000000,
         'status': 'for sale'
     }, {
+        'id': 2,
         'floor': 1,
         'number': 35,
         'area': 40.5,
@@ -118,6 +122,7 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         'start_price': 5000000,
         'status': 'for sale'
     }, {
+        'id': 3,
         'floor': 2,
         'number': 46,
         'area': 25,
@@ -127,6 +132,7 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         'start_price': 2500000,
         'status': 'for sale'
     }, {
+        'id': 4,
         'floor': 2,
         'number': 49,
         'area': 30.5,
@@ -150,6 +156,7 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
 
 def test_update_apartment(client: TestClient, monkeypatch):
     test_data = {
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -160,6 +167,7 @@ def test_update_apartment(client: TestClient, monkeypatch):
         'status': 'for sale'
     }
     test_update_data = {
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -170,27 +178,28 @@ def test_update_apartment(client: TestClient, monkeypatch):
         'status': 'for sale'
     }
 
-    def mock_read_apartment(db, number):
+    def mock_read_apartment(db, apartment_id):
         return test_data
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
-    def mock_update_apartment(db, apartment, floor, area, rooms, start_price, balcony, finishing):
+    def mock_update_apartment(db, apartment, floor, area, rooms, start_price, balcony, finishing, status):
         return test_update_data
 
     monkeypatch.setattr(crud, 'update_apartment', mock_update_apartment)
 
-    response = client.put('/apartments/34/', data=json.dumps(test_update_data), )
+    response = client.put('/apartments/1/', data=json.dumps(test_update_data), )
     assert response.status_code == 200
     assert response.json() == test_update_data
 
 
 @pytest.mark.parametrize(
-    'number, payload, status_code',
+    'apartment_id, payload, status_code',
     [
-        [34, {}, 422],
-        [34, {'floor': 1}, 422],
+        [1, {}, 422],
+        [1, {'id': 1}, 422],
         [999, {
+            'id': 1,
             'floor': 1,
             'number': 34,
             'area': 30.5,
@@ -200,7 +209,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'start_price': 3000000,
             'status': 'for sale'
         }, 404],
-        [34, {
+        [1, {
+            'id': 1,
             'floor': 'one',
             'number': 34,
             'area': 30.5,
@@ -210,7 +220,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'start_price': 3000000,
             'status': 'for sale'
         }, 422],
-        [34, {
+        [1, {
+            'id': 1,
             'floor': 1,
             'number': 34,
             'area': '',
@@ -221,6 +232,7 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'status': 'for sale'
         }, 422],
         [0, {
+            'id': 1,
             'floor': 1,
             'number': 34,
             'area': 30.5,
@@ -230,7 +242,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'start_price': 3000000,
             'status': 'for sale'
         }, 422],
-        [0, {
+        [1, {
+            'id': 1,
             'floor': 1,
             'number': 34,
             'area': 30.5,
@@ -242,18 +255,19 @@ def test_update_apartment(client: TestClient, monkeypatch):
         }, 422],
     ],
 )
-def test_update_apartment_invalid(client: TestClient, monkeypatch, number, payload, status_code):
-    def mock_read_apartment(db, number):
+def test_update_apartment_invalid(client: TestClient, monkeypatch, apartment_id, payload, status_code):
+    def mock_read_apartment(db, apartment_id):
         return None
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
-    response = client.put(f'/apartments/{number}/', data=json.dumps(payload), )
+    response = client.put(f'/apartments/{apartment_id}/', data=json.dumps(payload), )
     assert response.status_code == status_code
 
 
 def test_remove_apartment(client: TestClient, monkeypatch):
     test_data = {
+        'id': 1,
         'floor': 1,
         'number': 34,
         'area': 30.5,
@@ -264,23 +278,23 @@ def test_remove_apartment(client: TestClient, monkeypatch):
         'status': 'for sale'
     }
 
-    def mock_read_apartment(db, number):
+    def mock_read_apartment(db, apartment_id):
         return test_data
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
-    def mock_delete_apartment(db, number):
+    def mock_delete_apartment(db, apartment_id):
         return test_data
 
     monkeypatch.setattr(crud, 'delete_apartment', mock_delete_apartment)
 
-    response = client.delete('/apartments/34/')
+    response = client.delete('/apartments/1/')
     assert response.status_code == 200
     assert response.json() == test_data
 
 
 def test_remove_note_incorrect_id(client: TestClient, monkeypatch):
-    def mock_read_apartment(db, number):
+    def mock_read_apartment(db, apartment_id):
         return None
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
