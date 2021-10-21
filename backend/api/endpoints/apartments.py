@@ -24,3 +24,21 @@ def read_apartment(*, db: Session = Depends(get_db), number: int = Path(..., gt=
 @router.get('/apartments/', response_model=list[schemas.Apartment])
 def read_all_apartments(db: Session = Depends(get_db)):
     return crud.read_all_apartments(db)
+
+
+@router.put('/apartments/{number}/', response_model=schemas.Apartment)
+def update_apartment(*, db: Session = Depends(get_db),
+                     number: int = Path(..., gt=0), payload: schemas.Apartment):
+    apartment = crud.read_apartment(db=db, number=number)
+    if not apartment:
+        raise HTTPException(status_code=404, detail='Apartment not found')
+    apartment = crud.update_apartment(
+        db=db, apartment=apartment,
+        floor=payload.floor,
+        area=payload.area,
+        rooms=payload.rooms,
+        start_price=payload.start_price,
+        balcony=payload.balcony,
+        finishing=payload.finishing,
+    )
+    return apartment

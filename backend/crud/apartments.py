@@ -29,3 +29,15 @@ def read_apartment(db: Session, number: int):
 
 def read_all_apartments(db: Session):
     return db.query(models.Apartment).all()
+
+
+def update_apartment(db: Session, apartment: models.Apartment,
+                     floor: int, area: float, rooms: int, start_price: int, balcony: bool, finishing: bool):
+    apartment.floor = floor
+    apartment.area = area
+    apartment.rooms = rooms
+    apartment.start_price = start_price
+    apartment.balcony = balcony
+    apartment.finishing = finishing
+    db.commit()
+    return apartment

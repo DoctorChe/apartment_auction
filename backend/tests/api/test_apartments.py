@@ -1,5 +1,6 @@
 import json
 
+import pytest
 from fastapi.testclient import TestClient
 
 from backend import crud
@@ -140,3 +141,91 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
     response = client.get('/apartments/')
     assert response.status_code == 200
     assert response.json() == test_data
+
+
+def test_update_apartment(client: TestClient, monkeypatch):
+    test_data = {
+        'floor': 1,
+        'number': 34,
+        'area': 30.5,
+        'rooms': 1,
+        'balcony': True,
+        'finishing': True,
+        'start_price': 3000000
+    }
+    test_update_data = {
+        'floor': 1,
+        'number': 34,
+        'area': 30.5,
+        'rooms': 1,
+        'balcony': True,
+        'finishing': True,
+        'start_price': 5000000
+    }
+
+    def mock_read_apartment(db, number):
+        return test_data
+
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
+
+    def mock_update_apartment(db, apartment, floor, area, rooms, start_price, balcony, finishing):
+        return test_update_data
+
+    monkeypatch.setattr(crud, 'update_apartment', mock_update_apartment)
+
+    response = client.put('/apartments/34/', data=json.dumps(test_update_data), )
+    assert response.status_code == 200
+    assert response.json() == test_update_data
+
+
+@pytest.mark.parametrize(
+    'number, payload, status_code',
+    [
+        [34, {}, 422],
+        [34, {'floor': 1}, 422],
+        [999, {
+            'floor': 1,
+            'number': 34,
+            'area': 30.5,
+            'rooms': 1,
+            'balcony': True,
+            'finishing': True,
+            'start_price': 3000000
+        }, 404],
+        [34, {
+            'floor': 'one',
+            'number': 34,
+            'area': 30.5,
+            'rooms': 1,
+            'balcony': True,
+            'finishing': True,
+            'start_price': 3000000
+        }, 422],
+        [34, {
+            'floor': 1,
+            'number': 34,
+            'area': '',
+            'rooms': 1,
+            'balcony': True,
+            'finishing': True,
+            'start_price': 3000000
+        }, 422],
+        [0, {
+            'floor': 1,
+            'number': 34,
+            'area': 30.5,
+            'rooms': 1,
+            'balcony': True,
+            'finishing': True,
+            'start_price': 3000000
+        }, 422],
+    ],
+)
+def test_update_apartment_invalid(client: TestClient, monkeypatch, number, payload, status_code):
+    def mock_read_apartment(db, number):
+        return None
+
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
+
+    response = client.put(f'/apartments/{number}/', data=json.dumps(payload), )
+    assert response.status_code == status_code
