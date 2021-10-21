@@ -25,3 +25,7 @@ def create_apartments(db: Session, apartments: list[schemas.ApartmentIn]) -> lis
 
 def read_apartment(db: Session, number: int):
     return db.query(models.Apartment).filter(models.Apartment.number == number).first()
+
+
+def read_all_apartments(db: Session):
+    return db.query(models.Apartment).all()

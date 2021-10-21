@@ -94,3 +94,49 @@ def test_read_apartment_incorrect_number(client: TestClient, monkeypatch):
 
     response = client.get('/apartments/0')
     assert response.status_code == 422
+
+
+def test_read_all_apartments(client: TestClient, monkeypatch):
+    test_data = [{
+        'floor': 1,
+        'number': 34,
+        'area': 30.5,
+        'rooms': 1,
+        'balcony': True,
+        'finishing': True,
+        'start_price': 3000000
+    }, {
+        "floor": 1,
+        "number": 35,
+        "area": 40.5,
+        "rooms": 2,
+        'balcony': True,
+        'finishing': False,
+        "start_price": 5000000
+    }, {
+        "floor": 2,
+        "number": 46,
+        "area": 25,
+        "rooms": 1,
+        'balcony': False,
+        'finishing': True,
+        "start_price": 2500000
+    }, {
+        "floor": 2,
+        "number": 49,
+        "area": 30.5,
+        "rooms": 1,
+        'balcony': True,
+        'finishing': True,
+        "start_price": 3000000
+    }
+]
+
+    def mock_read_all_apartments(db):
+        return test_data
+
+    monkeypatch.setattr(crud, 'read_all_apartments', mock_read_all_apartments)
+
+    response = client.get('/apartments/')
+    assert response.status_code == 200
+    assert response.json() == test_data

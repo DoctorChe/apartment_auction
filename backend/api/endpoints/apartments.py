@@ -19,3 +19,8 @@ def read_apartment(*, db: Session = Depends(get_db), number: int = Path(..., gt=
     if not apartment:
         raise HTTPException(status_code=404, detail='Apartment not found')
     return apartment
+
+
+@router.get('/apartments/', response_model=list[schemas.Apartment])
+def read_all_apartments(db: Session = Depends(get_db)):
+    return crud.read_all_apartments(db)
