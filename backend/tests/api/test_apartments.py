@@ -229,3 +229,43 @@ def test_update_apartment_invalid(client: TestClient, monkeypatch, number, paylo
 
     response = client.put(f'/apartments/{number}/', data=json.dumps(payload), )
     assert response.status_code == status_code
+
+
+def test_remove_apartment(client: TestClient, monkeypatch):
+    test_data = {
+        'floor': 1,
+        'number': 34,
+        'area': 30.5,
+        'rooms': 1,
+        'balcony': True,
+        'finishing': True,
+        'start_price': 3000000
+    }
+
+    def mock_read_apartment(db, number):
+        return test_data
+
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
+
+    def mock_delete_apartment(db, number):
+        return test_data
+
+    monkeypatch.setattr(crud, 'delete_apartment', mock_delete_apartment)
+
+    response = client.delete('/apartments/34/')
+    assert response.status_code == 200
+    assert response.json() == test_data
+
+
+def test_remove_note_incorrect_id(client: TestClient, monkeypatch):
+    def mock_read_apartment(db, number):
+        return None
+
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
+
+    response = client.delete('/apartments/999/')
+    assert response.status_code == 404
+    assert response.json()['detail'] == 'Apartment not found'
+
+    response = client.delete('/apartments/0/')
+    assert response.status_code == 422

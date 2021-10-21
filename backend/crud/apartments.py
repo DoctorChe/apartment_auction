@@ -41,3 +41,10 @@ def update_apartment(db: Session, apartment: models.Apartment,
     apartment.finishing = finishing
     db.commit()
     return apartment
+
+
+def delete_apartment(db: Session, number: int):
+    apartment = db.query(models.Apartment).filter(models.Apartment.number == number).first()
+    db.delete(apartment)
+    db.commit()
+    return apartment

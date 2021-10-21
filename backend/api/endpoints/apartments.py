@@ -42,3 +42,12 @@ def update_apartment(*, db: Session = Depends(get_db),
         finishing=payload.finishing,
     )
     return apartment
+
+
+@router.delete('/apartments/{number}/', response_model=schemas.Apartment)
+def delete_apartment(*, db: Session = Depends(get_db), number: int = Path(..., gt=0)):
+    apartment = crud.read_apartment(db=db, number=number)
+    if not apartment:
+        raise HTTPException(status_code=404, detail='Apartment not found')
+    apartment = crud.delete_apartment(db=db, number=number)
+    return apartment

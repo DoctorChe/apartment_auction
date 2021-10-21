@@ -3,5 +3,6 @@ from .apartments import (
     create_apartments,
     read_apartment,
     read_all_apartments,
-    update_apartment
+    update_apartment,
+    delete_apartment,
 )
