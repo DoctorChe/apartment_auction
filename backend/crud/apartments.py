@@ -8,10 +8,10 @@ logger = get_logger(__name__)
 
 def create_apartment(db: Session, apartment_in: schemas.ApartmentIn) -> schemas.Apartment:
     logger.info(apartment_in)
-    classes = apartment_in.get('classes', {})
+    classes = apartment_in.classes
     balcony = True if 'C балконом' in classes else False
     finishing = True if 'С отделкой' in classes else False
-    apartment = schemas.Apartment(**apartment_in, balcony=balcony, finishing=finishing)
+    apartment = schemas.Apartment(**apartment_in.dict(), balcony=balcony, finishing=finishing)
     apartment_db = models.Apartment(**apartment.dict())
     db.add(apartment_db)
     db.commit()

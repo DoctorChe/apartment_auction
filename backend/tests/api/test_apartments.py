@@ -35,6 +35,32 @@ def test_create_apartment(client: TestClient, monkeypatch):
     assert response.json() == return_data
 
 
+def test_create_apartment_invalid_json(client: TestClient):
+    wrong_test_data = {
+        'floor': 1,
+        'number': 1,
+        'area': 30.5,
+        'rooms': 1,
+        'classes': ['C балконом', 'С отделкой'],
+    }
+    response = client.post("/apartments/", data=json.dumps(wrong_test_data))
+    assert response.status_code == 422
+
+    wrong_test_data = {
+        'floor': 'one',
+        'number': 1,
+        'area': 30.5,
+        'rooms': 1,
+        'classes': ['C балконом', 'С отделкой'],
+        'start_price': 3000000
+    }
+
+    response = client.post(
+        "/apartments/", data=json.dumps(wrong_test_data)
+    )
+    assert response.status_code == 422
+
+
 def test_read_apartment(client: TestClient, monkeypatch):
     test_data = {
         'floor': 1,
