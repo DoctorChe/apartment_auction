@@ -23,7 +23,8 @@ def test_create_apartment(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 3000000
+        'start_price': 3000000,
+        'status': 'for sale'
     }
 
     def mock_create_apartment(db, apartment_in):
@@ -36,30 +37,29 @@ def test_create_apartment(client: TestClient, monkeypatch):
     assert response.json() == return_data
 
 
-def test_create_apartment_invalid_json(client: TestClient):
-    wrong_test_data = {
-        'floor': 1,
-        'number': 1,
-        'area': 30.5,
-        'rooms': 1,
-        'classes': ['C балконом', 'С отделкой'],
-    }
-    response = client.post("/apartments/", data=json.dumps(wrong_test_data))
-    assert response.status_code == 422
-
-    wrong_test_data = {
-        'floor': 'one',
-        'number': 1,
-        'area': 30.5,
-        'rooms': 1,
-        'classes': ['C балконом', 'С отделкой'],
-        'start_price': 3000000
-    }
-
-    response = client.post(
-        '/apartments/', data=json.dumps(wrong_test_data)
-    )
-    assert response.status_code == 422
+@pytest.mark.parametrize(
+    'payload, status_code',
+    [
+        [{
+            'floor': 1,
+            'number': 1,
+            'area': 30.5,
+            'rooms': 1,
+            'classes': ['C балконом', 'С отделкой'],
+        }, 422],
+        [{
+            'floor': 'one',
+            'number': 1,
+            'area': 30.5,
+            'rooms': 1,
+            'classes': ['C балконом', 'С отделкой'],
+            'start_price': 3000000
+        }, 422],
+    ]
+)
+def test_create_apartment_invalid_json(client: TestClient, payload, status_code):
+    response = client.post('/apartments/', data=json.dumps(payload))
+    assert response.status_code == status_code
 
 
 def test_read_apartment(client: TestClient, monkeypatch):
@@ -70,7 +70,8 @@ def test_read_apartment(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 3000000
+        'start_price': 3000000,
+        'status': 'for sale'
     }
 
     def mock_read_apartment(db, number):
@@ -105,7 +106,8 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 3000000
+        'start_price': 3000000,
+        'status': 'for sale'
     }, {
         "floor": 1,
         "number": 35,
@@ -113,7 +115,8 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         "rooms": 2,
         'balcony': True,
         'finishing': False,
-        "start_price": 5000000
+        "start_price": 5000000,
+        'status': 'for sale'
     }, {
         "floor": 2,
         "number": 46,
@@ -121,7 +124,8 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         "rooms": 1,
         'balcony': False,
         'finishing': True,
-        "start_price": 2500000
+        "start_price": 2500000,
+        'status': 'for sale'
     }, {
         "floor": 2,
         "number": 49,
@@ -129,7 +133,8 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         "rooms": 1,
         'balcony': True,
         'finishing': True,
-        "start_price": 3000000
+        "start_price": 3000000,
+        'status': 'for sale'
     }
 ]
 
@@ -151,7 +156,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 3000000
+        'start_price': 3000000,
+        'status': 'for sale'
     }
     test_update_data = {
         'floor': 1,
@@ -160,7 +166,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 5000000
+        'start_price': 5000000,
+        'status': 'for sale'
     }
 
     def mock_read_apartment(db, number):
@@ -190,7 +197,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'rooms': 1,
             'balcony': True,
             'finishing': True,
-            'start_price': 3000000
+            'start_price': 3000000,
+            'status': 'for sale'
         }, 404],
         [34, {
             'floor': 'one',
@@ -199,7 +207,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'rooms': 1,
             'balcony': True,
             'finishing': True,
-            'start_price': 3000000
+            'start_price': 3000000,
+            'status': 'for sale'
         }, 422],
         [34, {
             'floor': 1,
@@ -208,7 +217,8 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'rooms': 1,
             'balcony': True,
             'finishing': True,
-            'start_price': 3000000
+            'start_price': 3000000,
+            'status': 'for sale'
         }, 422],
         [0, {
             'floor': 1,
@@ -217,7 +227,18 @@ def test_update_apartment(client: TestClient, monkeypatch):
             'rooms': 1,
             'balcony': True,
             'finishing': True,
-            'start_price': 3000000
+            'start_price': 3000000,
+            'status': 'for sale'
+        }, 422],
+        [0, {
+            'floor': 1,
+            'number': 34,
+            'area': 30.5,
+            'rooms': 1,
+            'balcony': True,
+            'finishing': True,
+            'start_price': 3000000,
+            'status': 'wrong status'
         }, 422],
     ],
 )
@@ -239,7 +260,8 @@ def test_remove_apartment(client: TestClient, monkeypatch):
         'rooms': 1,
         'balcony': True,
         'finishing': True,
-        'start_price': 3000000
+        'start_price': 3000000,
+        'status': 'for sale'
     }
 
     def mock_read_apartment(db, number):

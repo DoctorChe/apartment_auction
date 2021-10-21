@@ -1,4 +1,12 @@
+from enum import Enum
+
 from pydantic import BaseModel
+
+
+class Status(str, Enum):
+    FOR_SALE = 'for sale'
+    TRADING = 'trading'
+    SOLD_OUT = 'sold out'
 
 
 class ApartmentBase(BaseModel):
@@ -16,6 +24,7 @@ class ApartmentIn(ApartmentBase):
 class Apartment(ApartmentBase):
     balcony: bool
     finishing: bool
+    status: Status = Status.FOR_SALE
 
     class Config:
         orm_mode = True

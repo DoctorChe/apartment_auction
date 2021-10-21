@@ -40,6 +40,7 @@ def update_apartment(*, db: Session = Depends(get_db),
         start_price=payload.start_price,
         balcony=payload.balcony,
         finishing=payload.finishing,
+        status=payload.status,
     )
     return apartment
 

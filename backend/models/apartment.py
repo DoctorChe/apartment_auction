@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, Boolean
+from sqlalchemy import Column, Integer, Float, Boolean, String
 
 from backend.db.base_class import Base
 
@@ -13,3 +13,4 @@ class Apartment(Base):
     balcony = Column(Boolean, nullable=False)
     finishing = Column(Boolean, nullable=False)
     start_price = Column(Integer, nullable=False)
+    status = Column(String, nullable=False)

@@ -32,13 +32,15 @@ def read_all_apartments(db: Session):
 
 
 def update_apartment(db: Session, apartment: models.Apartment,
-                     floor: int, area: float, rooms: int, start_price: int, balcony: bool, finishing: bool):
+                     floor: int, area: float, rooms: int, start_price: int, balcony: bool, finishing: bool,
+                     status: schemas.Status):
     apartment.floor = floor
     apartment.area = area
     apartment.rooms = rooms
     apartment.start_price = start_price
     apartment.balcony = balcony
     apartment.finishing = finishing
+    apartment.status = status
     db.commit()
     return apartment
 

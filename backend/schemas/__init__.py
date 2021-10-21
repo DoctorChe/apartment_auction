@@ -1,1 +1,1 @@
-from .apartment import ApartmentIn, Apartment
+from .apartment import ApartmentIn, Apartment, Status
