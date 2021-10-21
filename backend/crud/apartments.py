@@ -21,3 +21,7 @@ def create_apartment(db: Session, apartment_in: schemas.ApartmentIn) -> schemas.
 
 def create_apartments(db: Session, apartments: list[schemas.ApartmentIn]) -> list[schemas.Apartment]:
     return [create_apartment(db, apartment_in=apartment) for apartment in apartments]
+
+
+def read_apartment(db: Session, number: int):
+    return db.query(models.Apartment).filter(models.Apartment.number == number).first()

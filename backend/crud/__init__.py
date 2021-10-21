@@ -1,1 +1,1 @@
-from .apartments import create_apartment, create_apartments
+from .apartments import create_apartment, create_apartments, read_apartment
