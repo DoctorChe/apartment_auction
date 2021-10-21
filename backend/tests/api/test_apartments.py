@@ -56,7 +56,7 @@ def test_create_apartment_invalid_json(client: TestClient):
     }
 
     response = client.post(
-        "/apartments/", data=json.dumps(wrong_test_data)
+        '/apartments/', data=json.dumps(wrong_test_data)
     )
     assert response.status_code == 422
 
@@ -75,8 +75,22 @@ def test_read_apartment(client: TestClient, monkeypatch):
     def mock_read_apartment(db, number):
         return test_data
 
-    monkeypatch.setattr(crud, "read_apartment", mock_read_apartment)
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
     response = client.get("/apartments/34")
     assert response.status_code == 200
     assert response.json() == test_data
+
+
+def test_read_apartment_incorrect_number(client: TestClient, monkeypatch):
+    def mock_read_apartment(db, number):
+        return None
+
+    monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
+
+    response = client.get('/apartments/999')
+    assert response.status_code == 404
+    assert response.json()['detail'] == 'Apartment not found'
+
+    response = client.get('/apartments/0')
+    assert response.status_code == 422
