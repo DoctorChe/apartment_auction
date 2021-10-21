@@ -79,7 +79,7 @@ def test_read_apartment(client: TestClient, monkeypatch):
 
     monkeypatch.setattr(crud, 'read_apartment', mock_read_apartment)
 
-    response = client.get("/apartments/34")
+    response = client.get('/apartments/34')
     assert response.status_code == 200
     assert response.json() == test_data
 
@@ -109,31 +109,31 @@ def test_read_all_apartments(client: TestClient, monkeypatch):
         'start_price': 3000000,
         'status': 'for sale'
     }, {
-        "floor": 1,
-        "number": 35,
-        "area": 40.5,
-        "rooms": 2,
+        'floor': 1,
+        'number': 35,
+        'area': 40.5,
+        'rooms': 2,
         'balcony': True,
         'finishing': False,
-        "start_price": 5000000,
+        'start_price': 5000000,
         'status': 'for sale'
     }, {
-        "floor": 2,
-        "number": 46,
-        "area": 25,
-        "rooms": 1,
+        'floor': 2,
+        'number': 46,
+        'area': 25,
+        'rooms': 1,
         'balcony': False,
         'finishing': True,
-        "start_price": 2500000,
+        'start_price': 2500000,
         'status': 'for sale'
     }, {
-        "floor": 2,
-        "number": 49,
-        "area": 30.5,
-        "rooms": 1,
+        'floor': 2,
+        'number': 49,
+        'area': 30.5,
+        'rooms': 1,
         'balcony': True,
         'finishing': True,
-        "start_price": 3000000,
+        'start_price': 3000000,
         'status': 'for sale'
     }
 ]
