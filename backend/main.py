@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.api.endpoints import apartments, root
+from backend.api.endpoints import apartments, auction, root
+from backend.core.config import settings
 
 app = FastAPI()
 
@@ -14,4 +15,5 @@ app.add_middleware(
 )
 
 app.include_router(apartments.router, prefix='/apartments', tags=['apartments'])
+app.include_router(auction.router, prefix='/auctions', tags=['auction'])
 app.include_router(root.router, tags=['Hello world!'])
