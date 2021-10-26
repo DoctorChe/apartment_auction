@@ -1,10 +1,20 @@
-from fastapi import APIRouter, Depends, Path, Query, HTTPException
+from fastapi import APIRouter, Depends, Path, Query, Request, HTTPException
 from sqlalchemy.orm import Session
+from sse_starlette.sse import EventSourceResponse
 
 from backend import schemas, crud
 from backend.api.dependencies import get_db
+from backend.core.logger_config import get_logger
+from backend.utils.server_sent_event_util import event_generator
+
+logger = get_logger(__name__)
 
 router = APIRouter()
+
+
+@router.get('/stream')
+async def message_stream(bid_duration: int, request: Request):
+    return EventSourceResponse(event_generator(bid_duration, request))
 
 
 @router.post('/', response_model=schemas.Auction, status_code=201)
