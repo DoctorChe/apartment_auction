@@ -25,3 +25,13 @@ services:
       - ${POSTGRES_PORT}:5432
     volumes:
       - ${POSTGRES_VOLUME}:/var/lib/postgresql/data
+
+  frontend:
+    build: ./frontend
+    image: vueapp:0.0.2
+    container_name: "vue_app_container"
+#    volumes:
+#      - './frontend:/app'
+#      - '/app/node_modules'
+    ports:
+      - ${FRONEND_HOST_PORT}:8080
